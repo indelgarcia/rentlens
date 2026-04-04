@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "vibe-agents": {
+      "source": "khazp/vibe-coding-prompt-template",
+      "sourceType": "github",
+      "computedHash": "d5af9dc77886537e4dd29bd4760e05e918f130bce1fe20d4c0584787e09b5fb7"
+    },
+    "vibe-build": {
+      "source": "khazp/vibe-coding-prompt-template",
+      "sourceType": "github",
+      "computedHash": "d0c2d08d72cdbd40f34090f85cf59ecbbc76f1c04231103bac89c3e7952c60f5"
+    },
+    "vibe-prd": {
+      "source": "khazp/vibe-coding-prompt-template",
+      "sourceType": "github",
+      "computedHash": "8d5b3c0392868c1cae29633a0e03c4ca4621fee8ffc75f12731ec873ea761b20"
+    },
+    "vibe-research": {
+      "source": "khazp/vibe-coding-prompt-template",
+      "sourceType": "github",
+      "computedHash": "80d594d98e5daaa118a4149ad9b69d12cf422bf1550d386f879b14ea09f7d567"
+    },
+    "vibe-techdesign": {
+      "source": "khazp/vibe-coding-prompt-template",
+      "sourceType": "github",
+      "computedHash": "d1f62742a9abc5a255faedf2bbdc09b050bee1e5565310b5123ee7f4326d8901"
+    },
+    "vibe-workflow": {
+      "source": "khazp/vibe-coding-prompt-template",
+      "sourceType": "github",
+      "computedHash": "9e7380c507c75fa6bf26faeba20dd275ab05e9d3ce874c5d4ac151891f12c929"
+    }
+  }
+}

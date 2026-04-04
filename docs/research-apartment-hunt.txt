@@ -1,0 +1,126 @@
+# RentLens - Market Research
+# Date: 2026-04-04
+
+## 1. Problem Statement
+
+NYC renters find a listing they're interested in but have no easy way to evaluate it.
+They end up opening multiple tabs -- Google Maps for commute, crime maps for safety,
+Rentometer to check if the price is fair. RentLens solves this by letting users input
+a single listing's details and instantly getting all the insights in one place.
+
+## 2. Product Concept
+
+RentLens is NOT a listing search engine. It is a **listing evaluator**.
+
+User flow:
+1. User finds a listing on StreetEasy, Zillow, Craigslist, etc.
+2. User inputs listing details into RentLens (address, rent, beds, baths, amenities)
+3. User optionally inputs custom POIs (work, friend's place, gym)
+4. RentLens returns a dashboard with: market value rating, safety score, POI commute times
+
+This approach eliminates the hardest technical challenge (sourcing listings) and focuses
+entirely on the unique value: the SCORES and INSIGHTS.
+
+## 3. Target Market
+
+- NYC renters (8.1M+ residents, ~65% are renters)
+- Vacancy rate ~1.4% - extremely competitive market
+- Primary personas:
+  - Young professionals relocating to NYC or moving neighborhoods
+  - Remote workers who prioritize lifestyle/neighborhood over commute
+  - Budget-conscious renters who want to know if they're overpaying
+  - Anyone evaluating a specific listing they found elsewhere
+
+## 4. Competitive Landscape
+
+### Why No One Does This
+
+| App | What They Do | Why They Don't Solve This |
+|-----|-------------|--------------------------|
+| StreetEasy | Listing search with NYC data | Shows listings, not evaluation scores |
+| Zillow | Listing search with price trends | Generic, no safety/commute/value scoring |
+| RentHop | Listing quality scoring | Scores the LISTING accuracy, not the DEAL |
+| Walk Score | Walkability/transit scores | Standalone tool, not integrated with rent data |
+| SpotCrime | Crime heatmaps | Standalone tool, no rent context |
+| Rentometer | Rent comparison | Standalone tool, no safety/commute context |
+| DwellCheck | Livability scores | Closest competitor, but no custom POI or market value % |
+
+### Key Insight
+Each insight exists in isolation. No tool lets you input ONE listing and get ALL insights
+(market value + safety + commute to YOUR specific places) on a single dashboard.
+
+## 5. Unique Value Propositions
+
+### 5.1 Market Value Rating
+- "This rent is 12% above market value for a 1BR in Astoria"
+- Compares user-input rent against similar units by neighborhood, bedroom count, amenities
+- Data sources: HUD Fair Market Rents (free), Rentometer API (freemium)
+
+### 5.2 Area Safety Rating
+- Neighborhood safety score (0-100) based on crime data
+- Data sources: NYPD CompStat (free), NYC Open Data crime datasets (free)
+
+### 5.3 POI Commute Calculator
+- User inputs custom POIs (work, friend's place, gym, etc.)
+- Shows transit time, walking time, and distance from the listing address to each POI
+- Data sources: Google Maps Distance Matrix API ($200/mo free credit)
+
+## 6. Available Data Sources & APIs
+
+### Free / Free Tier
+- NYC Open Data (data.cityofnewyork.us) - crime, housing, transportation
+- NYPD CompStat - official crime stats by precinct
+- HUD Fair Market Rents - annual rent benchmarks by ZIP code
+- Walk Score API - walkability, transit, bike scores (free tier available)
+
+### Freemium / Paid (low cost)
+- Google Maps Platform - distance/transit calculations ($200/mo free credit, more than enough for portfolio use)
+- Rentometer API - rent comparisons by address
+- RentCast API - property data, rent estimates, comps
+
+### Not Needed for Option B
+- StreetEasy API (no listing scraping needed)
+- Apify scrapers (no listing scraping needed)
+- Yelp/Google Places (things-to-do is v2)
+
+## 7. Market Validation
+
+### Signals That This Is Needed
+- Multiple standalone tools exist (Walk Score, SpotCrime, Rentometer) = demand proven
+- Reddit/forums frequently show renters manually checking 5+ sites per listing
+- No single tool combines all insights for a user-provided listing
+- The "open another tab" workflow is universally frustrating
+
+### Risks (Reduced vs. Option A)
+- API costs at scale (mitigated: portfolio project, low traffic)
+- Data freshness for crime stats (mitigated: NYC Open Data updates regularly)
+- HUD FMR data is annual, not real-time (mitigated: good enough for directional guidance)
+
+### Risks Eliminated by Option B
+- No listing scraping = no legal/ToS concerns
+- No data freshness issues for listings
+- No dependency on unreliable third-party APIs for core content
+- Dramatically simpler architecture
+
+## 8. MVP Scope
+
+### Must Have (v1)
+- Listing input form (address, rent, beds, baths, amenities)
+- Custom POI input
+- Market value rating (% above/below similar units)
+- Area safety score
+- POI commute times (transit + walking)
+- Single results dashboard with key scores prominent, extras collapsible
+
+### Nice to Have (v2)
+- Things to do / lifestyle score
+- Save & compare multiple listings
+- Lookup history
+- User accounts
+- Neighborhood deep-dive pages
+
+### Out of Scope
+- Listing search/browsing
+- Application/lease management
+- Landlord-facing features
+- Listings outside NYC
