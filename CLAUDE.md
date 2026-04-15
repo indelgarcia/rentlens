@@ -32,6 +32,7 @@ This is a Windows/PowerShell environment.
 ## Commit Style
 - Short 1-2 sentence commit messages
 - No co-authored-by tags
+- Do not commit yourself, user will commit, return to user the commit message and files changed for user to review and commit
 
 ## Project Structure
 ```
