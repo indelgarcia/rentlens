@@ -1,5 +1,8 @@
 # CLAUDE.md - Claude Code Configuration
 
+## Platform / Shell
+This is a Windows/PowerShell environment.
+
 ## Project Context
 **App:** RentLens
 **Stack:** Next.js + Tailwind (frontend) | FastAPI + Python (backend) | Supabase (database)
@@ -22,6 +25,9 @@
 ### Backend (from /backend)
 - `uvicorn app.main:app --reload` - Start FastAPI dev server (port 8000)
 - `pip install -r requirements.txt` - Install dependencies
+
+## Environment Setup
+- Always use a Python virtual environment (`venv`) for dependency installation; never install globally.
 
 ## Commit Style
 - Short 1-2 sentence commit messages
