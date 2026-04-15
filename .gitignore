@@ -7,6 +7,9 @@ __pycache__/
 venv/
 .venv/
 
+# MCP config (contains secrets)
+.mcp.json
+
 # Environment variables
 .env
 .env.local
