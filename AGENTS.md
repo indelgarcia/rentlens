@@ -29,20 +29,20 @@ Load only when needed:
 - `docs/TechDesign-RentLens-MVP.md` - Full technical design
 
 ## Current State
-**Last Updated:** 2026-04-04
-**Working On:** Project setup
-**Recently Completed:** Research, PRD, Tech Design, Agent Config
+**Last Updated:** 2026-05-24
+**Working On:** Phase 2 - Core Features
+**Recently Completed:** Phase 1 Foundation (frontend, backend, Supabase schema, HUD FMR data seeded — 287 NYC ZIP codes, FY2026)
 **Blocked By:** None
 
 ## Roadmap
 
 ### Phase 1: Foundation
-- [ ] Initialize Next.js frontend with Tailwind
-- [ ] Initialize FastAPI backend
-- [ ] Set up Supabase project and create tables
-- [ ] Download and load HUD FMR data into Supabase
-- [ ] Create .gitignore and .env files
-- [ ] Basic landing page with form UI (static, no API yet)
+- [x] Initialize Next.js frontend with Tailwind
+- [x] Initialize FastAPI backend
+- [x] Set up Supabase project and create tables
+- [x] Download and load HUD FMR data into Supabase
+- [x] Create .gitignore and .env files
+- [x] Basic landing page with form UI (static, no API yet)
 
 ### Phase 2: Core Features (one at a time)
 - [ ] Market Value Rating (Supabase lookup + calculation)
