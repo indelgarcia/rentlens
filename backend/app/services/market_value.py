@@ -1,7 +1,7 @@
-import re
 from fastapi import HTTPException
 from app.config import supabase_client
 from app.models.response import MarketValueResult
+from app.utils import extract_zip
 
 BEDROOM_COLUMNS = {
     0: "efficiency",
@@ -20,18 +20,11 @@ BEDROOM_LABELS = {
 }
 
 
-def _extract_zip(address: str) -> str:
-    matches = re.findall(r"\b(\d{5})\b", address)
-    if not matches:
-        raise HTTPException(status_code=400, detail="Could not extract a ZIP code from the address. Make sure it ends with a 5-digit ZIP (e.g. 'Astoria, NY 11102').")
-    return matches[-1]
-
-
 def get_market_value(address: str, bedrooms: int, rent: float) -> MarketValueResult:
     if bedrooms not in BEDROOM_COLUMNS:
         raise HTTPException(status_code=400, detail=f"Bedrooms must be 0–4, got {bedrooms}.")
 
-    zip_code = _extract_zip(address)
+    zip_code = extract_zip(address)
     col = BEDROOM_COLUMNS[bedrooms]
 
     result = supabase_client.table("fair_market_rents").select(f"{col}, fiscal_year, borough").eq("zip_code", zip_code).execute()

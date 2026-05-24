@@ -10,6 +10,22 @@ class MarketValueResult(BaseModel):
     comparison_basis: str
 
 
+class SafetyDetails(BaseModel):
+    felonies: int
+    misdemeanors: int
+    violations: int
+    radius_meters: int
+    data_period: str
+
+
+class SafetyResult(BaseModel):
+    score: int
+    label: str
+    color: str
+    details: SafetyDetails
+
+
 class EvaluateResponse(BaseModel):
     address: str
     market_value: MarketValueResult
+    safety: SafetyResult
