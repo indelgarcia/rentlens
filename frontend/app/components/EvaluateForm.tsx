@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { evaluateListing } from "@/app/lib/api";
 
 type POI = { label: string; address: string };
 
@@ -14,17 +16,34 @@ type FormData = {
 const MAX_POIS = 3;
 
 export default function EvaluateForm() {
+  const router = useRouter();
   const [form, setForm] = useState<FormData>({
     address: "",
     bedrooms: "1",
     rent: "",
     pois: [{ label: "", address: "" }],
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log("Submitting:", form);
-    // TODO: wire up to backend /api/evaluate in Phase 2
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await evaluateListing({
+        address: form.address,
+        bedrooms: parseInt(form.bedrooms, 10),
+        rent: parseFloat(form.rent),
+        pois: form.pois.filter((p) => p.address.trim()),
+      });
+      sessionStorage.setItem("rentlens_result", JSON.stringify(result));
+      router.push("/results");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   function updatePOI(index: number, field: keyof POI, value: string) {
@@ -148,11 +167,18 @@ export default function EvaluateForm() {
         )}
       </div>
 
+      {error && (
+        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+          {error}
+        </p>
+      )}
+
       <button
         type="submit"
-        className="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+        disabled={loading}
+        className="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        Evaluate listing
+        {loading ? "Evaluating…" : "Evaluate listing"}
       </button>
     </form>
   );

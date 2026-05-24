@@ -25,7 +25,16 @@ class SafetyResult(BaseModel):
     details: SafetyDetails
 
 
+class CommuteEntry(BaseModel):
+    label: str
+    address: str
+    transit_time: str | None
+    walking_time: str | None
+    distance_miles: float | None
+
+
 class EvaluateResponse(BaseModel):
     address: str
     market_value: MarketValueResult
     safety: SafetyResult
+    commutes: list[CommuteEntry] = []
