@@ -1,4 +1,4 @@
-import EvaluateForm from "./components/EvaluateForm";
+import EvaluateSection from "./components/EvaluateSection";
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
           </p>
         </div>
 
-        <EvaluateForm />
+        <EvaluateSection />
       </section>
     </main>
   );

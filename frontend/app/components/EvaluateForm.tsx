@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 import { evaluateListing } from "@/app/lib/api";
+import type { EvaluateResponse } from "@/app/lib/api";
 
 type POI = { label: string; address: string };
 
@@ -14,9 +14,13 @@ type FormData = {
 };
 
 const MAX_POIS = 3;
+const POIS_STORAGE_KEY = "rentlens_pois";
 
-export default function EvaluateForm() {
-  const router = useRouter();
+interface EvaluateFormProps {
+  onResult: (result: EvaluateResponse) => void;
+}
+
+export default function EvaluateForm({ onResult }: EvaluateFormProps) {
   const [form, setForm] = useState<FormData>({
     address: "",
     bedrooms: "1",
@@ -25,20 +29,54 @@ export default function EvaluateForm() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultCache = useRef<Map<string, EvaluateResponse>>(new Map());
+
+  // Restore saved POI destinations on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(POIS_STORAGE_KEY);
+    if (saved) {
+      try {
+        setForm((prev) => ({ ...prev, pois: JSON.parse(saved) as POI[] }));
+      } catch {
+        // ignore malformed storage
+      }
+    }
+  }, []);
+
+  // Persist POI destinations whenever they change
+  useEffect(() => {
+    localStorage.setItem(POIS_STORAGE_KEY, JSON.stringify(form.pois));
+  }, [form.pois]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    const activePois = form.pois.filter((p) => p.address.trim());
+    const cacheKey = [
+      form.address.trim().toLowerCase(),
+      form.bedrooms,
+      form.rent,
+      ...activePois.map((p) => p.address.trim().toLowerCase()),
+    ].join("|");
+
+    const cached = resultCache.current.get(cacheKey);
+    if (cached) {
+      onResult(cached);
+      return;
+    }
+
+    setLoading(true);
     try {
       const result = await evaluateListing({
         address: form.address,
         bedrooms: parseInt(form.bedrooms, 10),
         rent: parseFloat(form.rent),
-        pois: form.pois.filter((p) => p.address.trim()),
+        pois: activePois,
       });
+      resultCache.current.set(cacheKey, result);
       sessionStorage.setItem("rentlens_result", JSON.stringify(result));
-      router.push("/results");
+      onResult(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -67,6 +105,9 @@ export default function EvaluateForm() {
     }));
   }
 
+  const inputClass =
+    "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500";
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -83,7 +124,7 @@ export default function EvaluateForm() {
           placeholder="123 Main St, Brooklyn, NY 11201"
           value={form.address}
           onChange={(e) => setForm((prev) => ({ ...prev, address: e.target.value }))}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputClass}
         />
       </div>
 
@@ -96,7 +137,7 @@ export default function EvaluateForm() {
           <select
             value={form.bedrooms}
             onChange={(e) => setForm((prev) => ({ ...prev, bedrooms: e.target.value }))}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           >
             <option value="0">Studio / 0BR</option>
             <option value="1">1 Bedroom</option>
@@ -116,7 +157,7 @@ export default function EvaluateForm() {
             placeholder="2500"
             value={form.rent}
             onChange={(e) => setForm((prev) => ({ ...prev, rent: e.target.value }))}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
       </div>
@@ -134,14 +175,14 @@ export default function EvaluateForm() {
                 placeholder="Label (e.g. Work)"
                 value={poi.label}
                 onChange={(e) => updatePOI(i, "label", e.target.value)}
-                className="w-28 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-28 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <input
                 type="text"
                 placeholder="Address"
                 value={poi.address}
                 onChange={(e) => updatePOI(i, "address", e.target.value)}
-                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {form.pois.length > 1 && (
                 <button

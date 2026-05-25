@@ -39,14 +39,14 @@ def get_market_value(address: str, bedrooms: int, rent: float) -> MarketValueRes
     score_pct = round(((rent - fmr) / fmr) * 100, 1)
 
     if score_pct > 5:
-        label, color = "above market value", "red"
+        label, color = "above HUD benchmark", "red"
     elif score_pct < -5:
-        label, color = "below market value", "green"
+        label, color = "below HUD benchmark", "green"
     else:
-        label, color = "at market value", "yellow"
+        label, color = "at HUD benchmark", "yellow"
 
     bedroom_label = BEDROOM_LABELS[bedrooms]
-    comparison_basis = f"{bedroom_label} in ZIP {zip_code} (FY{fiscal_year} HUD FMR)"
+    comparison_basis = f"{bedroom_label} in ZIP {zip_code} — HUD FY{fiscal_year} Fair Market Rent (40th percentile of local rents)"
 
     return MarketValueResult(
         score_pct=score_pct,
